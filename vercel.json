@@ -33,8 +33,6 @@
   "env": {
     "APP_ENV": "production",
     "APP_DEBUG": "false",
-    "APP_URL": "https://manager-upp.vercel.app/",
-    "APP_KEY": "base64:u7cb3QEO/iIeAGwKCBYnGegbr4iAb1LhAHKbpL6JF34=",
     "LOG_CHANNEL": "stderr",
     "CACHE_DRIVER": "array",
     "CACHE_STORE": "array",
@@ -44,13 +42,6 @@
     "APP_PACKAGES_CACHE": "/tmp/packages.php",
     "APP_ROUTES_CACHE": "/tmp/routes.php",
     "APP_SERVICES_CACHE": "/tmp/services.php",
-    "VIEW_COMPILED_PATH": "/tmp",
-    "DB_CONNECTION": "pgsql",
-    "DB_HOST": "aws-1-ap-southeast-1.pooler.supabase.com",
-    "DB_PORT": "5432",
-    "DB_DATABASE": "postgres",
-    "DB_USERNAME": "postgres.avnixymvorkrtjqyobbu",
-    "DB_PASSWORD": "lalalilalilu4you",
-    "DB_SSLMODE": "require"
+    "VIEW_COMPILED_PATH": "/tmp"
   }
 }
