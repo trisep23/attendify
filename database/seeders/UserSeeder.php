@@ -26,5 +26,32 @@ class UserSeeder extends Seeder
                 'role' => 'user',
             ]
         );
+
+        User::updateOrCreate(
+            ['email' => 'tri@attendify.test'],
+            [
+                'name' => 'Tri Septiani',
+                'password' => 'password',
+                'role' => 'user',
+            ]
+        );
+
+        User::updateOrCreate(
+            ['email' => 'iin@attendify.test'],
+            [
+                'name' => 'IIn Sumarni',
+                'password' => 'password',
+                'role' => 'user',
+            ]
+        );
+
+        User::updateOrCreate(
+            ['email' => 'hafiz@attendify.test'],
+            [
+                'name' => 'Muhammad Hafiz Assyifa',
+                'password' => 'password',
+                'role' => 'user',
+            ]
+        );
     }
 }
