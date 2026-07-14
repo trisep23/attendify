@@ -26,10 +26,6 @@ export default function History({ user, attendances = [] }) {
                         <h1 className="text-2xl font-bold text-slate-800">
                             Riwayat Absensi
                         </h1>
-
-                        <p className="mt-1 text-sm text-slate-500">
-                            Daftar seluruh absensi kerja praktik kamu.
-                        </p>
                     </div>
 
                     <Link
