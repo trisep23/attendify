@@ -92,10 +92,6 @@ export default function UserLayout({ user, children }) {
                                 className="flex items-center gap-2 rounded-xl p-1.5 transition hover:bg-slate-100"
                                 aria-label="Buka profil"
                             >
-                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-cyan-100 text-sm font-bold text-cyan-600">
-                                    {getInitials(user.name)}
-                                </div>
-
                                 <div className="hidden text-left sm:block">
                                     <p className="max-w-28 truncate text-sm font-semibold text-slate-800">
                                         {user.name}
