@@ -103,10 +103,6 @@ export default function Dashboard({
                 {/* Sapaan dan tanggal */}
                 <section className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                     <div>
-                        <p className="mb-1 text-sm font-semibold text-cyan-600">
-                            Dashboard
-                        </p>
-
                         <h1 className="text-2xl font-bold text-slate-800 sm:text-3xl">
                             {greeting}, {user.name} 👋
                         </h1>
