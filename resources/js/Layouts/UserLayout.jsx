@@ -70,19 +70,14 @@ export default function UserLayout({ user, children }) {
                     <div className="flex items-center gap-4">
                         {/* Menu desktop */}
                         <nav className="hidden items-center gap-2 md:flex">
-                            <Link
-                                href="/dashboard"
-                                className={desktopNavClass('/dashboard')}
-                            >
-                                Dashboard
-                            </Link>
-
-                            <Link
-                                href="/history"
-                                className={desktopNavClass('/history')}
-                            >
-                                Riwayat
-                            </Link>
+                            {user.role !== 'user' && (
+                                <Link
+                                    href="/dashboard"
+                                    className={desktopNavClass('/dashboard')}
+                                >
+                                    Dashboard
+                                </Link>
+                            )}
                         </nav>
 
                         <div className="hidden h-8 w-px bg-slate-200 md:block" />
@@ -176,56 +171,35 @@ export default function UserLayout({ user, children }) {
             </main>
 
             {/* Bottom navigation mobile */}
-            <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white shadow-[0_-4px_16px_rgba(15,23,42,0.08)] md:hidden">
-                <div className="mx-auto flex h-16 max-w-md px-4">
-                    <Link
-                        href="/dashboard"
-                        className={mobileNavClass('/dashboard')}
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="21"
-                            height="21"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
+            {user.role !== 'user' && (
+                <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white shadow-[0_-4px_16px_rgba(15,23,42,0.08)] md:hidden">
+                    <div className="mx-auto flex h-16 max-w-md px-4">
+                        <Link
+                            href="/dashboard"
+                            className={mobileNavClass('/dashboard')}
                         >
-                            <rect x="3" y="3" width="7" height="7" rx="1" />
-                            <rect x="14" y="3" width="7" height="7" rx="1" />
-                            <rect x="3" y="14" width="7" height="7" rx="1" />
-                            <rect x="14" y="14" width="7" height="7" rx="1" />
-                        </svg>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="21"
+                                height="21"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            >
+                                <rect x="3" y="3" width="7" height="7" rx="1" />
+                                <rect x="14" y="3" width="7" height="7" rx="1" />
+                                <rect x="3" y="14" width="7" height="7" rx="1" />
+                                <rect x="14" y="14" width="7" height="7" rx="1" />
+                            </svg>
 
-                        <span>Dashboard</span>
-                    </Link>
-
-                    <Link
-                        href="/history"
-                        className={mobileNavClass('/history')}
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="21"
-                            height="21"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
-                            <path d="M3 3v5h5" />
-                            <path d="M12 7v5l3 2" />
-                        </svg>
-
-                        <span>Riwayat</span>
-                    </Link>
-                </div>
-            </nav>
+                            <span>Dashboard</span>
+                        </Link>
+                    </div>
+                </nav>
+            )}
         </div>
     );
 }
