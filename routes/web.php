@@ -20,8 +20,14 @@ Route::middleware('auth')->group(function () {
         ->name('dashboard');
 
     Route::get('/history', function (Request $request) {
+        $attendances = $request->user()
+            ->attendances()
+            ->latest('date')
+            ->get(['id', 'date', 'check_in_time', 'check_out_time', 'status']);
+
         return Inertia::render('History', [
             'user' => $request->user(),
+            'attendances' => $attendances,
         ]);
     })->name('history');
 
