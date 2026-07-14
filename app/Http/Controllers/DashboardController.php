@@ -42,8 +42,6 @@ class DashboardController extends Controller
                 'date',
                 'check_in_time',
                 'check_out_time',
-                'photo_check_in',
-                'photo_check_out',
                 'status',
             ]);
 

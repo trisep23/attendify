@@ -10,8 +10,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'date',
     'check_in_time',
     'check_out_time',
-    'photo_check_in',
-    'photo_check_out',
     'status',
 ])]
 class Attendance extends Model

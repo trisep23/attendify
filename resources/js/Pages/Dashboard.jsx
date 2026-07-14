@@ -201,7 +201,7 @@ export default function Dashboard({
                             </h2>
 
                             <p className="mt-1 text-sm text-slate-500">
-                                Ambil foto untuk mencatat waktu absensi.
+                                Silakan catat waktu absensi masuk dan pulang Anda.
                             </p>
                         </div>
 
@@ -232,10 +232,6 @@ export default function Dashboard({
                                     : 'Absen Pulang'}
                             </button>
                         </div>
-
-                        <p className="mt-4 text-center text-xs text-slate-400">
-                            Foto wajib diambil ketika melakukan absensi.
-                        </p>
                     </article>
                 </section>
 
