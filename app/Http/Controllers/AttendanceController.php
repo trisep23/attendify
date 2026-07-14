@@ -7,29 +7,54 @@ use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
 {
-    private function isValidWifi(string $ip): bool
+    private function isValidLocation(?float $lat, ?float $lon): bool
     {
-        // Izinkan localhost untuk mempermudah development lokal
-        if (app()->environment('local') && ($ip === '127.0.0.1' || $ip === '::1')) {
+        // Izinkan localhost/bypass untuk mempermudah development lokal jika koordinat kosong
+        if (app()->environment('local') && (is_null($lat) || is_null($lon))) {
             return true;
         }
 
-        $ipLong = ip2long($ip);
-        if ($ipLong === false) {
+        if (is_null($lat) || is_null($lon)) {
             return false;
         }
 
-        $minLong = ip2long(env('WIFI_IP_MIN', '10.36.102.0'));
-        $maxLong = ip2long(env('WIFI_IP_MAX', '10.36.102.254'));
+        $officeLat = (float) env('OFFICE_LATITUDE', -5.3658690);
+        $officeLon = (float) env('OFFICE_LONGITUDE', 105.2192606);
+        $allowedRadius = (float) env('OFFICE_RADIUS_METERS', 25);
 
-        return $ipLong >= $minLong && $ipLong <= $maxLong;
+        $distance = $this->calculateDistance($lat, $lon, $officeLat, $officeLon);
+
+        return $distance <= $allowedRadius;
+    }
+
+    private function calculateDistance(float $lat1, float $lon1, float $lat2, float $lon2): float
+    {
+        $earthRadius = 6371000; // in meters
+
+        $latFrom = deg2rad($lat1);
+        $lonFrom = deg2rad($lon1);
+        $latTo = deg2rad($lat2);
+        $lonTo = deg2rad($lon2);
+
+        $latDelta = $latTo - $latFrom;
+        $lonDelta = $lonTo - $lonFrom;
+
+        $angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) +
+            cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
+
+        return $angle * $earthRadius;
     }
 
     public function checkIn(Request $request): RedirectResponse
     {
-        if (! $this->isValidWifi($request->ip())) {
+        $request->validate([
+            'latitude' => ['nullable', 'numeric'],
+            'longitude' => ['nullable', 'numeric'],
+        ]);
+
+        if (! $this->isValidLocation($request->input('latitude'), $request->input('longitude'))) {
             return back()->withErrors([
-                'attendance' => 'Kamu harus terhubung ke WiFi kantor (10.36.102.0-254) untuk melakukan absensi.',
+                'attendance' => 'Kamu berada di luar radius kantor yang ditentukan (25 meter) atau GPS tidak aktif.',
             ]);
         }
 
@@ -67,9 +92,14 @@ class AttendanceController extends Controller
 
     public function checkOut(Request $request): RedirectResponse
     {
-        if (! $this->isValidWifi($request->ip())) {
+        $request->validate([
+            'latitude' => ['nullable', 'numeric'],
+            'longitude' => ['nullable', 'numeric'],
+        ]);
+
+        if (! $this->isValidLocation($request->input('latitude'), $request->input('longitude'))) {
             return back()->withErrors([
-                'attendance' => 'Kamu harus terhubung ke WiFi kantor (10.36.102.0-254) untuk melakukan absensi.',
+                'attendance' => 'Kamu berada di luar radius kantor yang ditentukan (25 meter) atau GPS tidak aktif.',
             ]);
         }
 

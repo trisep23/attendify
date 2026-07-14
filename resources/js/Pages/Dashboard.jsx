@@ -37,32 +37,61 @@ export default function Dashboard({
     const todayStatus = todayAttendance?.status ?? 'Belum absen';
 
     function handleAttendance(type) {
-        const endpoint =
-            type === 'check-in'
-                ? '/attendance/check-in'
-                : '/attendance/check-out';
+        if (!navigator.geolocation) {
+            alert('Browser kamu tidak mendukung deteksi lokasi (GPS).');
+            return;
+        }
 
-        const successMessage =
-            type === 'check-in'
-                ? 'Absen masuk berhasil.'
-                : 'Absen pulang berhasil.';
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                const endpoint =
+                    type === 'check-in'
+                        ? '/attendance/check-in'
+                        : '/attendance/check-out';
 
-        router.post(
-            endpoint,
-            {},
-            {
-                preserveScroll: true,
+                const successMessage =
+                    type === 'check-in'
+                        ? 'Absen masuk berhasil.'
+                        : 'Absen pulang berhasil.';
 
-                onSuccess: () => {
-                    alert(successMessage);
-                },
+                router.post(
+                    endpoint,
+                    {
+                        latitude,
+                        longitude,
+                    },
+                    {
+                        preserveScroll: true,
 
-                onError: (errors) => {
-                    if (errors.attendance) {
-                        alert(errors.attendance);
-                    }
-                },
+                        onSuccess: () => {
+                            alert(successMessage);
+                        },
+
+                        onError: (errors) => {
+                            if (errors.attendance) {
+                                alert(errors.attendance);
+                            }
+                        },
+                    },
+                );
             },
+            (error) => {
+                let errorMessage = 'Gagal mendapatkan lokasi GPS Anda.';
+                if (error.code === error.PERMISSION_DENIED) {
+                    errorMessage = 'Akses lokasi ditolak. Silakan izinkan akses GPS di pengaturan browser Anda.';
+                } else if (error.code === error.POSITION_UNAVAILABLE) {
+                    errorMessage = 'Informasi lokasi tidak tersedia.';
+                } else if (error.code === error.TIMEOUT) {
+                    errorMessage = 'Waktu permintaan lokasi habis.';
+                }
+                alert(errorMessage);
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0,
+            }
         );
     }
 
@@ -250,10 +279,6 @@ export default function Dashboard({
                                     <th className="px-3 py-4 font-medium">
                                         Status
                                     </th>
-
-                                    <th className="px-3 py-4 font-medium">
-                                        Foto
-                                    </th>
                                 </tr>
                             </thead>
 
@@ -261,7 +286,7 @@ export default function Dashboard({
                                 {recentAttendances.length === 0 ? (
                                     <tr>
                                         <td
-                                            colSpan="5"
+                                            colSpan="4"
                                             className="px-3 py-12 text-center"
                                         >
                                             <p className="font-medium text-slate-600">
@@ -304,15 +329,6 @@ export default function Dashboard({
                                                         attendance.status
                                                     }
                                                 />
-                                            </td>
-
-                                            <td className="px-3 py-4">
-                                                <button
-                                                    type="button"
-                                                    className="text-sm font-semibold text-cyan-600 hover:text-cyan-700"
-                                                >
-                                                    Lihat foto
-                                                </button>
                                             </td>
                                         </tr>
                                     ))
