@@ -37,61 +37,32 @@ export default function Dashboard({
     const todayStatus = todayAttendance?.status ?? 'Belum absen';
 
     function handleAttendance(type) {
-        if (!navigator.geolocation) {
-            alert('Browser kamu tidak mendukung deteksi lokasi (GPS).');
-            return;
-        }
+        const endpoint =
+            type === 'check-in'
+                ? '/attendance/check-in'
+                : '/attendance/check-out';
 
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const { latitude, longitude } = position.coords;
-                const endpoint =
-                    type === 'check-in'
-                        ? '/attendance/check-in'
-                        : '/attendance/check-out';
+        const successMessage =
+            type === 'check-in'
+                ? 'Absen masuk berhasil.'
+                : 'Absen pulang berhasil.';
 
-                const successMessage =
-                    type === 'check-in'
-                        ? 'Absen masuk berhasil.'
-                        : 'Absen pulang berhasil.';
-
-                router.post(
-                    endpoint,
-                    {
-                        latitude,
-                        longitude,
-                    },
-                    {
-                        preserveScroll: true,
-
-                        onSuccess: () => {
-                            alert(successMessage);
-                        },
-
-                        onError: (errors) => {
-                            if (errors.attendance) {
-                                alert(errors.attendance);
-                            }
-                        },
-                    },
-                );
-            },
-            (error) => {
-                let errorMessage = 'Gagal mendapatkan lokasi GPS Anda.';
-                if (error.code === error.PERMISSION_DENIED) {
-                    errorMessage = 'Akses lokasi ditolak. Silakan izinkan akses GPS di pengaturan browser Anda.';
-                } else if (error.code === error.POSITION_UNAVAILABLE) {
-                    errorMessage = 'Informasi lokasi tidak tersedia.';
-                } else if (error.code === error.TIMEOUT) {
-                    errorMessage = 'Waktu permintaan lokasi habis.';
-                }
-                alert(errorMessage);
-            },
+        router.post(
+            endpoint,
+            {},
             {
-                enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 0,
-            }
+                preserveScroll: true,
+
+                onSuccess: () => {
+                    alert(successMessage);
+                },
+
+                onError: (errors) => {
+                    if (errors.attendance) {
+                        alert(errors.attendance);
+                    }
+                },
+            },
         );
     }
 
