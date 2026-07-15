@@ -28,6 +28,19 @@ class AttendanceController extends Controller
             ]);
         }
 
+        // Cek batasan waktu masuk (WIB)
+        if (! env('BYPASS_TIME_LIMIT', app()->environment('local'))) {
+            $currentTime = now()->format('H:i:s');
+            $start = env('CHECK_IN_START', '07:00:00');
+            $end = env('CHECK_IN_END', '08:00:00');
+
+            if ($currentTime < $start || $currentTime > $end) {
+                return back()->withErrors([
+                    'attendance' => 'Absen masuk hanya diperbolehkan antara jam 07:00 sampai 08:00 WIB.',
+                ]);
+            }
+        }
+
         $user = $request->user();
 
         // Hanya role user yang boleh melakukan absensi.
@@ -68,6 +81,19 @@ class AttendanceController extends Controller
             return back()->withErrors([
                 'attendance' => 'Kamu harus terhubung ke WiFi kantor (IP: 103.144.14.14) untuk melakukan absensi.',
             ]);
+        }
+
+        // Cek batasan waktu pulang (WIB)
+        if (! env('BYPASS_TIME_LIMIT', app()->environment('local'))) {
+            $currentTime = now()->format('H:i:s');
+            $start = env('CHECK_OUT_START', '16:00:00');
+            $end = env('CHECK_OUT_END', '17:00:00');
+
+            if ($currentTime < $start || $currentTime > $end) {
+                return back()->withErrors([
+                    'attendance' => 'Absen pulang hanya diperbolehkan antara jam 16:00 sampai 17:00 WIB.',
+                ]);
+            }
         }
 
         $user = $request->user();
