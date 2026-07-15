@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import UserLayout from '../Layouts/UserLayout';
 
@@ -13,6 +14,15 @@ export default function Dashboard({
     todayAttendance = null,
     recentAttendances = [],
 }) {
+    const [toast, setToast] = useState(null);
+
+    const showToast = (message, type = 'success') => {
+        setToast({ message, type });
+        setTimeout(() => {
+            setToast(null);
+        }, 5000);
+    };
+
     const currentDate = new Intl.DateTimeFormat('id-ID', {
         weekday: 'long',
         day: 'numeric',
@@ -54,12 +64,12 @@ export default function Dashboard({
                 preserveScroll: true,
 
                 onSuccess: () => {
-                    alert(successMessage);
+                    showToast(successMessage, 'success');
                 },
 
                 onError: (errors) => {
                     if (errors.attendance) {
-                        alert(errors.attendance);
+                        showToast(errors.attendance, 'error');
                     }
                 },
             },
@@ -69,6 +79,36 @@ export default function Dashboard({
     return (
         <>
             <Head title="Dashboard - Attendify" />
+
+            {/* Custom Toast Notification Card */}
+            {toast && (
+                <div className="fixed top-6 right-6 z-50 flex w-[calc(100%-3rem)] max-w-md animate-fade-in-down items-center gap-3 rounded-2xl bg-white p-4 shadow-xl border border-slate-100 transition-all duration-300 sm:w-auto">
+                    <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
+                        toast.type === 'success' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'
+                    }`}>
+                        {toast.type === 'success' ? (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 4 4L19 6"/></svg>
+                        ) : (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+                        )}
+                    </div>
+                    <div className="flex-1">
+                        <p className="text-sm font-semibold text-slate-800">
+                            {toast.type === 'success' ? 'Berhasil' : 'Peringatan'}
+                        </p>
+                        <p className="mt-0.5 text-xs text-slate-500">
+                            {toast.message}
+                        </p>
+                    </div>
+                    <button
+                        onClick={() => setToast(null)}
+                        className="text-slate-400 hover:text-slate-600"
+                        aria-label="Tutup"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                    </button>
+                </div>
+            )}
 
             <UserLayout user={user}>
                 {/* Sapaan dan tanggal */}
