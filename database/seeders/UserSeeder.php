@@ -52,9 +52,9 @@ class UserSeeder extends Seeder
             'hafiz@attendify.test'
         ])->delete();
 
-        // Seed data absensi tanggal 6 s.d 13 Juli 2026
+        // Seed data absensi tanggal 6 s.d 14 Juli 2026
         $startDate = new \DateTime('2026-07-06');
-        $endDate = new \DateTime('2026-07-13');
+        $endDate = new \DateTime('2026-07-14');
         $interval = new \DateInterval('P1D');
         $dateRange = new \DatePeriod($startDate, $interval, $endDate->modify('+1 day'));
 
